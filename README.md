@@ -2,7 +2,7 @@
 
 PulseSense is a modular, high-velocity sentiment analysis platform that transforms raw data streams into live, actionable intelligence. It leverages **Apache Kafka** for orchestration, **NLTK (VADER)** for NLP intelligence, and **TimescaleDB** for high-performance time-series persistence.
 
-![PulseSense Dashboard Preview](https://github.com/user-attachments/assets/your-preview-here)
+![PulseSense Dashboard Preview](./docs/dashboard_preview.png)
 
 ## 🏗️ Architecture: The 3-Layer System
 
