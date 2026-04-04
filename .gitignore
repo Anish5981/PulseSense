@@ -1,0 +1,27 @@
+# PulseSense: Git Ignore Rules
+
+# Environments
+.venv/
+env/
+venv/
+ENV/
+
+# Python Cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Secrets & Configuration
+.env
+*.local
+credentials.json
+
+# Infrastructure Cache (Docker)
+timescaledb_data/
+grafana_data/
+.tmp/
+
+# OS Specific
+.DS_Store
+Thumbs.db

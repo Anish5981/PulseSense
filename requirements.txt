@@ -1,0 +1,5 @@
+kafka-python-ng
+nltk
+psycopg2-binary
+python-dotenv
+vaderSentiment
