@@ -35,7 +35,7 @@ class PulseDiscordClient(discord.Client):
 
         # Send to Kafka
         print(f"📧 New Message from {data['author']}: {data['text'][:50]}...")
-        self.producer.send(KAFKA_TOPIC, data)
+        self.producer.send_message(KAFKA_TOPIC, data)
 
 if __name__ == "__main__":
     # Ensure Message Content Intent is enabled in Discord Portal!
@@ -44,9 +44,20 @@ if __name__ == "__main__":
     
     client = PulseDiscordClient(intents=intents)
     
-    try:
-        client.run(TOKEN)
-    except Exception as e:
-        print(f"❌ Discord Connection Error: {e}")
-    finally:
-        print("🛑 Streamer Shutting Down...")
+    import time
+    from backoff import exponential_backoff
+    
+    attempt = 0
+    while True:
+        try:
+            client.run(TOKEN)
+            break
+        except Exception as e:
+            print(f"❌ Discord Connection Error: {e}")
+            delay = exponential_backoff(attempt)
+            print(f"⏳ Retrying in {delay:.2f} seconds...")
+            time.sleep(delay)
+            attempt += 1
+        finally:
+            if attempt == 0:
+                print("🛑 Streamer Shutting Down...")

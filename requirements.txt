@@ -1,5 +1,24 @@
+# Core Pipeline
 kafka-python-ng
-nltk
 psycopg2-binary
 python-dotenv
+
+# NLP - VADER (fast path)
+nltk
 vaderSentiment
+
+# NLP - Transformer (deep path)
+transformers
+onnxruntime
+optimum[onnxruntime]
+torch --index-url https://download.pytorch.org/whl/cpu
+
+# Preprocessing
+langdetect
+
+# Ingestion Sources
+requests
+discord.py
+
+# Stream Processing
+# (PyFlink will be run inside the Flink Docker container, which supports the required Python version)

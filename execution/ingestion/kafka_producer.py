@@ -13,18 +13,27 @@ class PulseProducer:
     Handles JSON serialization and asynchronous delivery.
     """
     def __init__(self, bootstrap_servers=['localhost:9092']):
-        try:
-            self.producer = KafkaProducer(
-                bootstrap_servers=bootstrap_servers,
-                value_serializer=lambda v: json.dumps(v).encode('utf-8'),
-                acks=1,
-                compression_type='gzip',
-                retries=5
-            )
-            logger.info(f"Connected to Kafka at {bootstrap_servers}")
-        except Exception as e:
-            logger.error(f"Failed to connect to Kafka: {e}")
-            raise
+        import time
+        from backoff import exponential_backoff
+        for attempt in range(10):
+            try:
+                self.producer = KafkaProducer(
+                    bootstrap_servers=bootstrap_servers,
+                    value_serializer=lambda v: json.dumps(v).encode('utf-8'),
+                    acks=1,
+                    compression_type='gzip',
+                    retries=5
+                )
+                logger.info(f"Connected to Kafka at {bootstrap_servers}")
+                break
+            except Exception as e:
+                logger.warning(f"Failed to connect to Kafka (attempt {attempt+1}): {e}")
+                delay = exponential_backoff(attempt)
+                logger.info(f"Retrying in {delay:.2f} seconds...")
+                time.sleep(delay)
+        else:
+            logger.error("Could not connect to Kafka after multiple attempts.")
+            raise Exception("Kafka connection failed")
 
     def send_message(self, topic, message):
         """
